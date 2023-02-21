@@ -3,5 +3,5 @@ class Estado:
     def __init__(self, num):
         self.numero = num
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.numero)

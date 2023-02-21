@@ -2,6 +2,7 @@ from Estado import *
 from Automata import *
 from Transiciones import *
 import matplotlib.pyplot as plt
+import networkx as nx
 
 def thompson(expresion_regular):
     """Convierte una expresión regular en un autómata utilizando el algoritmo de Thompson"""
@@ -99,11 +100,11 @@ def thompson(expresion_regular):
             b = stack.pop()
             a = stack.pop()
 
-            # Obteniendo el estado final del autómata b. (segundo autómata)
-            print(b.get_estado_final())
+            # # Obteniendo el estado final del autómata b. (segundo autómata)
+            # print(b.get_estado_final())
 
-            # Obteniendo el estado inicial del autómata a. (primer autómata)
-            print(a.get_estado_inicial())
+            # # Obteniendo el estado inicial del autómata a. (primer autómata)
+            # print(a.get_estado_inicial())
 
             # Buscando las transiciones del estado a.
             for i in lista:
@@ -172,8 +173,8 @@ def thompson(expresion_regular):
             # Agregando los nuevos estados a la lista de estados.
             lista.append(trans)
 
-    for automata in lista:
-        print(str(automata))
+    # for automata in lista:
+    #     print(str(automata))
 
     # # Imprimedo el inicio y el final del autómata.
     # print("Estado inicial: " + str(stack[0].get_estado_inicial()))
@@ -186,37 +187,66 @@ def thompson(expresion_regular):
         else:
             diccionario[i.getEstadoInicial()] = [(i.getSimbolo(), i.getEstadoFinal())]
 
-    for key, value in diccionario.items():
-        print(key, str(value))
+        # Guardando el estado final del autómata.
+        if i.getEstadoFinal() not in diccionario:
+            diccionario[i.getEstadoFinal()] = []
 
-    return lista
+    # for key, value in diccionario.items():
+    #     print(key, str(value))
 
-def graficar(lista): #Método para graficar el autómata.
+    auto = stack.pop() # Regresando los estados iniciales y finales.
+
+    return auto, lista, diccionario
+
+def graficar(automata, lista, diccionario): #Método para graficar el autómata.
+
+    # Cambiando el título de la ventana.
+    plt.title("Autómata Finito No Determinista")
+
+    #print(automata)
     
-    # Crea una nueva figura
-    fig, ax = plt.subplots()
+    # # Imprimiendo la lista.
+    # for automata in lista:
+    #     print(str(automata))
 
-    # Dibuja el estado inicial como un círculo
-    ax.add_patch(plt.Circle((0, 0), 0.1, color='black', fill=False))
+    # # Imprimiedo el diccionario.
+    # for key, value in diccionario.items():
+    #     print(key, str(value))
 
-    # Dibuja el estado final como un doble círculo
-    ax.add_patch(plt.Circle((1, 0), 0.1, color='black', fill=False))
-    ax.add_patch(plt.Circle((1, 0), 0.05, color='black'))
 
-    # Dibuja la flecha que conecta los estados
-    ax.arrow(0.1, 0, 0.8, 0, head_width=0.05, head_length=0.1, fc='black', ec='black')
+    G = nx.DiGraph() # Creando el grafo.
 
-    # Agrega etiquetas de texto a los estados y la transición
-    ax.text(0, -0.2, 'Inicio', ha='center', va='top')
-    ax.text(1, -0.2, 'Fin', ha='center', va='top')
-    ax.text(0.5, 0.1, 'a', ha='center', va='bottom')
+    print("Diciconario: " + str(diccionario))
 
-    # Configura los límites del gráfico y oculta los ejes
-    ax.set_xlim(-0.5, 1.5)
-    ax.set_ylim(-0.5, 0.5)
-    ax.set_aspect('equal')
-    ax.axis('off')
+    # Agregando los estados al grafo.
+    for estado in diccionario:
+        G.add_node(estado)
 
-    # Muestra el gráfico
+        # Verificando si el estado es inicial o final.
+        if estado == automata.get_estado_inicial():
+            G.nodes[estado]['color'] = 'green'
+        elif estado == automata.get_estado_final():
+            G.nodes[estado]['color'] = 'red'
+        else:
+            G.nodes[estado]['color'] = 'blue'
+
+    # Añadiendo las aristas al grafo.
+    for key, value in diccionario.items():
+        for simbolo, estado in value:
+            for i in lista:
+                G.add_edge(key, estado, label=simbolo)
+
+    
+    # Configurar opciones de visualización
+    pos = nx.spring_layout(G)
+    node_colors = [G.nodes[estado]["color"] for estado in G.nodes()]
+    edge_labels = {(origen, destino): datos["label"] for origen, destino, datos in G.edges(data=True)}
+
+    # Dibujar el grafo
+    nx.draw_networkx_nodes(G, pos, node_color=node_colors)
+    nx.draw_networkx_edges(G, pos)
+    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+
+    plt.axis("off")
     plt.show()
-
