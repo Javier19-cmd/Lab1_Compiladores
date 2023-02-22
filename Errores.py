@@ -15,10 +15,10 @@ def deteccion(regex):
     for i in range(len(regex)):
         if regex[i] == '+' or regex[i] == '*':
             if i == 0:
-                print("Error: la expresión tiene ++a.")
+                print("Error: la expresión tiene la forma de ++a o **a.")
                 return False
             elif regex[i - 1] == '+' or regex[i - 1] == '*':
-                print("Error: La expresión tiene un +a.")
+                print("Error: La expresión tiene un +a o *a.")
                 return False
         
         elif regex[i] == '.': # Verificando que en la expresión no existan cosas como ..a o .a.

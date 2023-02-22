@@ -227,6 +227,9 @@ def graficar(automata, lista, diccionario): #Método para graficar el autómata.
     # for key, value in diccionario.items():
     #     print(key, str(value))
 
+    # Colocando en un texto el estado inicial y el estado final.
+    #plt.text(0.5, 0.5, "Estado inicial: " + str(automata.get_estado_inicial()) + " Estado final: " + str(automata.get_estado_final()), fontsize=10)
+
 
     G = nx.DiGraph() # Creando el grafo.
 
