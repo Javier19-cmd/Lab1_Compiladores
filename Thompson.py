@@ -106,15 +106,29 @@ def thompson(expresion_regular):
             # # Obteniendo el estado inicial del autómata a. (primer autómata)
             # print(a.get_estado_inicial())
 
-            # Buscando las transiciones del estado a.
-            for i in lista:
-                if i.getEstadoInicial() == b.get_estado_inicial():
-                    # Creando una transición desde el estado inicial del autómata a al estado final del autómata b.
-                    n = Transiciones(a.get_estado_final(), i.getSimbolo(), b.get_estado_final())
-                    # Eliminando la transición del estado inicial del autómata b.
-                    lista.remove(i)
-                    # Agregando la nueva transición a la lista de transiciones.
-                    lista.append(n)
+            # Sacando la información de los estados.
+            estadoFinal = a.get_estado_final()
+            estadoInicial = b.get_estado_inicial()
+
+            # print("Estado final: ", estadoFinal)
+            # print("Estado inicial: ", estadoInicial)
+
+            # Merge de los estados.
+            for transicion in lista: 
+
+                if transicion.getEstadoInicial() == estadoInicial:
+                    
+                    transicion.setEstadoInicial(estadoFinal)
+
+                # if i.getEstadoInicial() == b.get_estado_inicial():
+                #     # Creando una transición desde el estado inicial del autómata a al estado final del autómata b.
+                #     n = Transiciones(a.get_estado_final(), i.getSimbolo(), b.get_estado_final())
+                #     # Eliminando la transición del estado inicial del autómata b.
+                #     lista.remove(i) 
+                #     # Agregando la nueva transición a la lista de transiciones.
+                #     lista.append(n)
+
+                #     print("Transición: ", n)
 
             # Crear el nuevo autómata y apilarlo en el stack
             nuevo_automata = Automata(a.get_estado_inicial(), b.get_estado_final())
