@@ -215,7 +215,7 @@ def thompson(expresion_regular):
 def graficar(automata, lista, diccionario): #Método para graficar el autómata.
 
     # Cambiando el título de la ventana.
-    plt.title("Autómata Finito No Determinista")
+    plt.title("Autómata Finito No Determinista - Thompson")
 
     #print(automata)
     
