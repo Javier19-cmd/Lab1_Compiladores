@@ -270,22 +270,25 @@ def graficar(automata, lista, diccionario): #Método para graficar el autómata.
     plt.show()
 
 def grafo(automata, lista, diccionario):
-    grafo = gv.Digraph('G', filename='grafo.gv', format='png')
+    grafo = gv.Digraph('G', filename='grafo', format='png')
 
-    estados = list(diccionario.keys())
+    estados = [ str(estado) for estado in diccionario.keys() ]
 
+    # Dibujando los nodos.
     for estado in estados:
-        if estado == automata.get_estado_inicial():
-            grafo.node(str(estado), shape='doublecircle')
-        elif estado == automata.get_estado_final():
-            grafo.node(str(estado), shape='circle')
+        if estado == str(automata.get_estado_inicial()):
+            grafo.node(estado, estado, color='green')
+        elif estado == str(automata.get_estado_final()):
+            grafo.node(estado, estado, color='red')
         else:
-            grafo.node(str(estado), shape='circle')
-
+            grafo.node(estado, estado, color='blue')
     
-    for transicion in lista:
-        grafo.edge(transicion.getEstadoInicial(), transicion.getEstadoFinal(), label=transicion.getSimbolo())
+    # Dibujando las aristas.
+    for key, value in diccionario.items():
+        for simbolo, estado in value:
+            for i in lista:
+                grafo.edge(str(key), str(estado), label=simbolo)
 
-    grafo.render('grafo.gv', view=True)
+    grafo.render('grafo', view=True)
 
     grafo.view()
