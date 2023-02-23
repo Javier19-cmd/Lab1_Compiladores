@@ -1,3 +1,5 @@
+import re
+
 # Clase para detectar errores.
 
 def deteccion(regex):
@@ -6,37 +8,22 @@ def deteccion(regex):
     if regex.count('(') != regex.count(')'):
         print("Error: La expresión regular no tiene paréntesis de cierre.")
         return False
+    
     # Verificando que la expresión tenga letras o números.
-    elif not any(char.isalpha() for char in regex):
-        print("Error: La expresión regular no tiene letras.")
+    coin = re.match(r"[a-zA-Z0-9]+", regex)
+
+    if not coin:
+        print("Error")
+        #print("Error: La expresión regular no puede tener números y letras.")
         return False
 
-    # Verificando que en la expresión no existan cosas como ++a o +a.
-    for i in range(len(regex)):
-        if regex[i] == '+' or regex[i] == '*':
-            if i == 0:
-                print("Error: la expresión tiene la forma de ++a o **a.")
-                return False
-            elif regex[i - 1] == '+' or regex[i - 1] == '*':
-                print("Error: La expresión tiene un +a o *a.")
-                return False
-        
-        elif regex[i] == '.': # Verificando que en la expresión no existan cosas como ..a o .a.
-            if i == 0:
-                print("Error: La expresión regular tiene .a")
-                return False
-            elif regex[i - 1] == '.':
-                print("Error: La expresión tiene ..a")
-                return False
 
-    # Verificando que la expresión no tenga cosas como a*+.
-    for i in range(len(regex)):
-        if regex[i] == '+':
-            if regex[i - 1] == '*':
-                print("Error: La expresión regular tiene un + a la par de un *")
-                return False
-        elif regex[i] == '*':
-            if regex[i - 1] == '+':
-                print("Error: La expresión regular tiene un * a la par de un +.")
-                return False
+    # Verificando que la expresión no tenga un * o un + al inicio.
+    coincidencia = re.match(r"^(?![*+]).*", regex)
+
+    if not coincidencia:
+        print("Error: La expresión regular no puede empezar con un * o un +.")
+        return False
+    
+    # Verificando que la expresión no tenga un * o un + al final.
     return True

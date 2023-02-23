@@ -3,6 +3,7 @@ from Automata import *
 from Transiciones import *
 import matplotlib.pyplot as plt
 import networkx as nx
+import graphviz as gv
 
 def thompson(expresion_regular):
     """Convierte una expresión regular en un autómata utilizando el algoritmo de Thompson"""
@@ -267,3 +268,24 @@ def graficar(automata, lista, diccionario): #Método para graficar el autómata.
 
     plt.axis("off")
     plt.show()
+
+def grafo(automata, lista, diccionario):
+    grafo = gv.Digraph('G', filename='grafo.gv', format='png')
+
+    estados = list(diccionario.keys())
+
+    for estado in estados:
+        if estado == automata.get_estado_inicial():
+            grafo.node(str(estado), shape='doublecircle')
+        elif estado == automata.get_estado_final():
+            grafo.node(str(estado), shape='circle')
+        else:
+            grafo.node(str(estado), shape='circle')
+
+    
+    for transicion in lista:
+        grafo.edge(transicion.getEstadoInicial(), transicion.getEstadoFinal(), label=transicion.getSimbolo())
+
+    grafo.render('grafo.gv', view=True)
+
+    grafo.view()
