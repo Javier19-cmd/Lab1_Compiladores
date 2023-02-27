@@ -4,11 +4,11 @@ from Errores import *
 
 inp = input("Ingrese la expresion regular: ")
 
-regex = evaluar(inp)
+verificacion = deteccion(inp) # Verificando que la expresión regular sea correcta.
 
-verificacion = deteccion(regex)
-
-if verificacion == True:
+if verificacion == True: # Si la expresión regular es correcta, se procede a evaluarla.
+    
+    regex = evaluar(inp)
     print("La expresion regular es correcta.")
     print("La expresion regular es: ", regex)
     automata, lista, diccionario = thompson(regex)
@@ -19,7 +19,3 @@ else:
     print("La expresion regular es incorrecta.")
 
 # Arreglar el problema de paréntesis sin abrir.
-
-# Revisar el problema del operador al final.
-
-# Revisar bien el algoritmo de Thompson.
