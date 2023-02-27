@@ -11,6 +11,7 @@ def thompson(expresion_regular):
     lista = []
     diccionario = {}
     estados = 0
+    epsilon = 'ε'
 
     for caracter in expresion_regular:
         if caracter == '|':
@@ -142,28 +143,52 @@ def thompson(expresion_regular):
             # lista.append(nuevo_automata)
         
         elif caracter == '?': # Operador de cero o una ocurrencia.
-            # Obtener el último automata del stack
+            # Este operador es equivalente a la expresión regular (a|ε).
+            
+            # Haciendo primero una transición con dos estados y ε.
+            inicio1 = Estado(estados)
+            estados += 1
+            fin1 = Estado(estados)
+            estados += 1
+
+            # Creando la transición.
+            en1 = Transiciones(inicio1, epsilon, fin1)
+            lista.append(en1)
+            nuevo_automata1 = Automata(inicio1, fin1)
+            stack.append(nuevo_automata1)
+
+            # Obtener los dos últimos automatas del stack
+            b = stack.pop()
             a = stack.pop()
 
+
             # Crear nuevos estados inicial y final
-            inicio = Estado(estados)
+            inicio2 = Estado(estados)
             estados += 1
-            fin = Estado(estados)
+            fin2 = Estado(estados)
             estados += 1
 
-            # Crear transiciones epsilon desde los nuevos estados inicial y final a los estados inicial y final del automata a
-            ne1 = Transiciones(inicio, 'ε', a.get_estado_inicial())
-            ne2 = Transiciones(inicio, 'ε', fin)
-            ne3 = Transiciones(a.get_estado_final(), 'ε', fin)
+            # Crear transiciones epsilon desde los nuevos estados inicial y final a los automatas a y b.
 
-            # Crear el nuevo autómata y apilarlo en el stack
-            nuevo_automata = Automata(inicio, fin)
-            stack.append(nuevo_automata)
-            
-            # Guardando las transiciones de la forma (estado_inicial, caracter, estado_final) en un diccionario.
-            lista.append(ne1)
-            lista.append(ne2)
-            lista.append(ne3)
+            # Creando las transiciones epsilon desde el estado inicial al estado inicial de a y b.
+            ns1 = Transiciones(inicio2, 'ε', a.get_estado_inicial())
+            ns2 = Transiciones(inicio2, 'ε', b.get_estado_inicial())
+            ns3 = Transiciones(a.get_estado_final(), 'ε', fin2)
+            ns4 = Transiciones(b.get_estado_final(), 'ε', fin2)
+
+            # Crear el nuevo autómata y apilarlo en el stack  
+            nuevo_automata2 = Automata(inicio2, fin2)
+        
+            # Guardando el nuevo automata en el stack.
+            stack.append(nuevo_automata2)
+
+            # Agregando los nuevos estados a la lista de estados.
+            lista.append(ns1)
+            lista.append(ns2)
+            lista.append(ns3)
+            lista.append(ns4)
+
+            print("Lista: ", str(lista))
 
         else:
             # Crear nuevos estados inicial y final para el autómata que representa el caracter actual.
@@ -212,6 +237,23 @@ def thompson(expresion_regular):
     auto = stack.pop() # Regresando los estados iniciales y finales.
 
     return auto, lista, diccionario
+
+def req(simbolo):
+    # Método para hacer la transición de un estado a otro con epsilon.
+        # Crear nuevos estados inicial y final para el autómata que representa el caracter actual.
+        # Crear nuevos estados inicial y final
+        inicio = Estado(estados)
+        estados += 1
+        fin = Estado(estados)
+        estados += 1
+
+        # # Crear transición desde el estado inicial al estado final con el caracter actual.
+        trans = Transiciones(inicio, simbolo, fin)
+        
+        # # Crear el nuevo autómata y apilarlo en el stack
+        nuevo_automata = Automata(inicio, fin)
+        
+        return trans, nuevo_automata
 
 def graficar(automata, lista, diccionario): #Método para graficar el autómata.
 
@@ -291,5 +333,9 @@ def grafo(automata, lista, diccionario):
         for simbolo, estado in value:
             grafo.edge(str(key), str(estado), label=simbolo)
 
+    # Colocando el autómta de manera horizontal.
+    grafo.graph_attr['rankdir'] = 'LR'
+
     grafo.render('grafo', view=True)
+
 
