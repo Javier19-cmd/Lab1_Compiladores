@@ -284,11 +284,12 @@ def grafo(automata, lista, diccionario):
             grafo.node(estado, estado, color='blue')
     
     # Dibujando las aristas.
+    print("Estados: " + str(estados))
+
+    # Dibujando las transiciones.
     for key, value in diccionario.items():
         for simbolo, estado in value:
-            for i in lista:
-                grafo.edge(str(key), str(estado), label=simbolo)
+            grafo.edge(str(key), str(estado), label=simbolo)
 
     grafo.render('grafo', view=True)
 
-    grafo.view()

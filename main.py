@@ -12,8 +12,14 @@ if verificacion == True:
     print("La expresion regular es correcta.")
     print("La expresion regular es: ", regex)
     automata, lista, diccionario = thompson(regex)
-    graficar(automata, lista, diccionario)
-    #grafo(automata, lista, diccionario)
+    #graficar(automata, lista, diccionario)
+    grafo(automata, lista, diccionario)
 
 else:
     print("La expresion regular es incorrecta.")
+
+# Arreglar el problema de paréntesis sin abrir.
+
+# Revisar el problema del operador al final.
+
+# Revisar bien el algoritmo de Thompson.
